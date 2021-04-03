@@ -14,14 +14,24 @@ String getMapMarkerUrl({
   final zoomLevel = zoom ?? 16;
   switch (mapType) {
     case MapType.google:
-      return Utils.buildUrl(
-        url: Platform.isIOS ? 'comgooglemaps://' : 'geo:0,0',
-        queryParams: {
-          'q': '${coords.latitude},${coords.longitude}($title)',
-          'zoom': '$zoomLevel',
-          ...(extraParams ?? {}),
-        },
-      );
+      return Platform.isIOS
+          ? Utils.buildUrl(
+              url: 'comgooglemaps://',
+              queryParams: {
+                'q': '($title)',
+                'zoom': '$zoomLevel',
+                'center': '${coords.latitude},${coords.longitude}',
+                ...(extraParams ?? {}),
+              },
+            )
+          : Utils.buildUrl(
+              url: 'geo:${coords.latitude},${coords.longitude}',
+              queryParams: {
+                'q': '($title)',
+                'zoom': '$zoomLevel',
+                ...(extraParams ?? {}),
+              },
+            );
 
     case MapType.googleGo:
       return Utils.buildUrl(
